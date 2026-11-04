@@ -1,3 +1,40 @@
+# Агентный RAG-конвейер с планированием запроса и контролем достаточности контекста
+
+Статья для сборника НИТУ «МИСИС» (курс «Научное письмо»), свёрстанная на шаблоне
+[sadekovlar/misis-article-latex](https://github.com/sadekovlar/misis-article-latex) (этот репозиторий — его форк).
+
+**PDF** собирается в [GitHub Actions](../../actions) при каждом push: откройте последний запуск
+workflow «Build» → раздел Artifacts → `article.pdf`.
+
+## Состав статьи
+
+| Раздел | Статус |
+|---|---|
+| I. Введение | ai_draft — автор переписывает своими словами |
+| II. Анализ существующих работ (табл. I — сравнение 7 методов) | ai_draft |
+| III. Постановка задачи | ai_draft |
+| IV. Предлагаемый метод (алгоритм 1) | ai_draft |
+| Декларация об использовании ИИ | `ai_declaration.tex`, собирается скриптом |
+| Литература (18 источников) | собирается скриптом из `refs.bib` |
+
+Разделы «Эксперимент» и «Заключение» на этом этапе не включаются.
+
+## Откуда берётся текст
+
+Статья — часть проекта с харнесом (папка «Научное письмо»): `paper/brief.md`, `paper/refs.bib`,
+`paper/claims.csv`. Правила:
+
+- каждая ссылка `\cite{...}` есть в `paper/refs.bib`, утверждение из источника помечено
+  комментарием `% C###` с id из `paper/claims.csv`;
+- список литературы между маркерами `% BEGIN/END BIBLIOGRAPHY` не набирается руками:
+  ```bash
+  python scripts/bib_to_tex.py ../misis-article-latex/article.tex
+  python scripts/check_claims.py --strict ../misis-article-latex/article.tex
+  ```
+- `ai_declaration.tex` — копия `paper/tex/generated/ai_declaration.tex` (`scripts/build_ai_declaration.py`).
+
+---
+
 # Шаблон научной статьи НИТУ «МИСиС» (LaTeX)
 
 LaTeX-шаблон статьи для сборника НИТУ «МИСиС»: XeLaTeX, две колонки.  
